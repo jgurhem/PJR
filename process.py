@@ -3,7 +3,7 @@ import json
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
-from core.Value import Value
+import core.DictHelper as dh
 
 input_res = []
 
@@ -15,27 +15,9 @@ def filter_dict(md):
   if md["success"] != "true": return False
   return True
 
-def extract_set(md, val_name):
-  s=set()
-  for d in md:
-    v = d.get(val_name, None)
-    if v != None:
-      s.add(v)
-  s = sorted(s)
-#  print(val_name + " : " + str(s))
-  return s
-
 def conv_list_el_to_int(ml):
   for i in range(len(ml)):
     ml[i] = int(ml[i])
-
-def add_val(md_out, val_from, val_to):
-  new = float(val_from)
-  prev = md_out.get(val_to, None)
-  if prev == None:
-    md_out[val_to] = Value(new)
-  else:
-    md_out[val_to].add(new)
 
 with open(sys.argv[1]) as fp:
   for cnt, line in enumerate(fp):
@@ -45,10 +27,10 @@ with open(sys.argv[1]) as fp:
     if filter_dict(mydict):
       input_res.append(mydict)
 
-nb_block_set = extract_set(input_res, "nb_blocks")
-blocksize_set = extract_set(input_res, "blocksize")
-nb_proc_per_task_set = extract_set(input_res, "nb_proc_per_task")
-lang_set = extract_set(input_res, "lang")
+nb_block_set = dh.extract_set(input_res, "nb_blocks")
+blocksize_set = dh.extract_set(input_res, "blocksize")
+nb_proc_per_task_set = dh.extract_set(input_res, "nb_proc_per_task")
+lang_set = dh.extract_set(input_res, "lang")
 
 conv_list_el_to_int(nb_block_set)
 conv_list_el_to_int(nb_proc_per_task_set)
@@ -69,9 +51,9 @@ for d in input_res:
     nppt = int(d["nb_proc_per_task"])
     nbb = int(d["nb_blocks"])
     if nppt in nb_proc_per_task_set and nbb in ymlxmp_data.keys():
-      add_val(ymlxmp_data[nbb], d["time_io"], nppt)
+      dh.add_val(ymlxmp_data[nbb], d["time_io"], nppt)
   else:
-    add_val(lang_v[lang], d["time_io"], d["nb_cores"])
+    dh.add_val(lang_v[lang], d["time_io"], d["nb_cores"])
 
 
 plt.style.use('dark_background')
@@ -81,11 +63,7 @@ ax = fig.gca()
 for it in ymlxmp_data.keys():
   v = dict()
   for i in sorted(nb_proc_per_task_set):
-    r = ymlxmp_data[it].get(i, None)
-    if r == None:
-      v[str(i)] = r
-    else:
-      v[str(i)] = getattr(r, 'get_' + op_type)()
+    v[str(i)] = dh.get_val(ymlxmp_data[it], i, op_type)
   label = str(it) + " x " + str(it) + " blocks"
   ax.plot(v.keys(), v.values(), label=label, marker="o")
 
@@ -94,11 +72,7 @@ for lang in lang_set:
   if lang == "YML+XMP": continue
   v = dict()
   for i in sorted(lang_v[lang].keys()):
-    r = lang_v[lang].get(i, None)
-    if r == None:
-      v[str(i)] = r
-    else:
-      v[str(i)] = getattr(r, 'get_' + op_type)()
+    v[str(i)] = dh.get_val(lang_v[lang], i, op_type)
   ax.plot(v.keys(), v.values(), label=lang, marker='x')
 
 ax.set_xlabel("#core/task")
