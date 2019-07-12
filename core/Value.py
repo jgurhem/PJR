@@ -9,7 +9,7 @@ class Value:
     self.__n += 1
     self.__sum += val
     self.__min = min(self.__min, val)
-    self.__max = min(self.__max, val)
+    self.__max = max(self.__max, val)
 
   def get_mean(self):
     return self.__sum / self.__n
