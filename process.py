@@ -3,6 +3,7 @@ import json
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
+from core.Value import Value
 
 input_res = []
 
@@ -31,8 +32,10 @@ def conv_list_el_to_int(ml):
 def add_val(md_out, val_from, val_to):
   new = float(val_from)
   prev = md_out.get(val_to, None)
-  if prev == None or new < prev:
-    md_out[val_to] = new
+  if prev == None:
+    md_out[val_to] = Value(new)
+  else:
+    md_out[val_to].add(new)
 
 with open(sys.argv[1]) as fp:
   for cnt, line in enumerate(fp):
@@ -50,7 +53,7 @@ lang_set = extract_set(input_res, "lang")
 conv_list_el_to_int(nb_block_set)
 conv_list_el_to_int(nb_proc_per_task_set)
 
-
+op_type = "min"
 
 ymlxmp_data = dict()
 for nbb in nb_block_set:
@@ -78,7 +81,11 @@ ax = fig.gca()
 for it in ymlxmp_data.keys():
   v = dict()
   for i in sorted(nb_proc_per_task_set):
-    v[str(i)] = ymlxmp_data[it].get(i, None)
+    r = ymlxmp_data[it].get(i, None)
+    if r == None:
+      v[str(i)] = r
+    else:
+      v[str(i)] = getattr(r, 'get_' + op_type)()
   label = str(it) + " x " + str(it) + " blocks"
   ax.plot(v.keys(), v.values(), label=label, marker="o")
 
@@ -87,8 +94,12 @@ for lang in lang_set:
   if lang == "YML+XMP": continue
   v = dict()
   for i in sorted(lang_v[lang].keys()):
-    v[str(i)] = lang_v[lang].get(i, None)
-  ax.plot(v.keys(), v.values(), label=lang, marker="x")
+    r = lang_v[lang].get(i, None)
+    if r == None:
+      v[str(i)] = r
+    else:
+      v[str(i)] = getattr(r, 'get_' + op_type)()
+  ax.plot(v.keys(), v.values(), label=lang, marker='x')
 
 ax.set_xlabel("#core/task")
 ax.set_ylabel("time (s)")
