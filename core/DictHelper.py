@@ -1,4 +1,5 @@
 from .Value import Value
+import json
 
 def extract_set(md, val_name):
   s=set()
@@ -25,3 +26,24 @@ def get_val(md, el, op_type):
     else:
       return getattr(r, 'get_' + op_type)()
 
+
+def __filter_tuple(v, tup):
+  for i in tup:
+    if v == i: return True
+  return False
+
+def __filter(md, fd):
+  for k in fd.keys():
+    if not __filter_tuple(md[k], fd[k]): return False
+  return True
+
+def read_json_file(filename, filter_dict):
+  input_res = []
+  with open(filename) as fp:
+    for cnt, line in enumerate(fp):
+      line=line.strip()
+      if not line.startswith("{"): continue
+      mydict=json.loads(line)
+      if __filter(mydict, filter_dict):
+        input_res.append(mydict)
+  return input_res

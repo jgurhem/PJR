@@ -1,32 +1,22 @@
 import sys
-import json
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
 import core.DictHelper as dh
 
-input_res = []
-
-def filter_dict(md):
-  if md["machine"] != "Poincare": return False
-#  if md["datasize"] != "8192": return False
-  if md["datasize"] != "16384": return False
-  if md["test"] != "blockLU": return False
-  if md["success"] != "true": return False
-  return True
-
 def conv_list_el_to_int(ml):
   for i in range(len(ml)):
     ml[i] = int(ml[i])
 
-with open(sys.argv[1]) as fp:
-  for cnt, line in enumerate(fp):
-    line=line.strip()
-    if not line.startswith("{"): continue
-    mydict=json.loads(line)
-    if filter_dict(mydict):
-      input_res.append(mydict)
 
+filter_dict = dict()
+filter_dict["machine"] = ("Poincare", )
+filter_dict["datasize"] = ("16384", )
+#filter_dict["datasize"] = ("8192", )
+filter_dict["test"] = ("blockLU", )
+filter_dict["success"] = ("true", )
+
+input_res = dh.read_json_file(sys.argv[1], filter_dict)
 lang_set = dh.extract_set(input_res, "lang")
 
 op_type = "min"

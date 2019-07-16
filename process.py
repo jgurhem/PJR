@@ -1,32 +1,21 @@
 import sys
-import json
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
 import core.DictHelper as dh
 
-input_res = []
-
-def filter_dict(md):
-  if md["machine"] != "Poincare": return False
-  if md["datasize"] != "128": return False
-  if md["test"] != "blockLU": return False
-  if md["nb_cores"] != "129" and md["nb_cores"] != "128": return False
-  if md["success"] != "true": return False
-  return True
-
 def conv_list_el_to_int(ml):
   for i in range(len(ml)):
     ml[i] = int(ml[i])
 
-with open(sys.argv[1]) as fp:
-  for cnt, line in enumerate(fp):
-    line=line.strip()
-    if not line.startswith("{"): continue
-    mydict=json.loads(line)
-    if filter_dict(mydict):
-      input_res.append(mydict)
+filter_dict = dict()
+filter_dict["machine"] = ("Poincare", )
+filter_dict["datasize"] = ("128", )
+filter_dict["test"] = ("blockLU", )
+filter_dict["nb_cores"] = ("128", "129")
+filter_dict["success"] = ("true", )
 
+input_res = dh.read_json_file(sys.argv[1], filter_dict)
 nb_block_set = dh.extract_set(input_res, "nb_blocks")
 blocksize_set = dh.extract_set(input_res, "blocksize")
 nb_proc_per_task_set = dh.extract_set(input_res, "nb_proc_per_task")
