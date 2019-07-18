@@ -15,7 +15,9 @@ filter_dict["test"] = ("blockLU", )
 filter_dict["nb_cores"] = ("128", "129")
 filter_dict["success"] = ("true", )
 
-input_res = dh.read_json_file(sys.argv[1], filter_dict)
+op_type = "min"
+
+input_res = dh.read_json_file(sys.argv[1], filter_dict, op_type)
 nb_block_set = dh.extract_set(input_res, "nb_blocks")
 blocksize_set = dh.extract_set(input_res, "blocksize")
 nb_proc_per_task_set = dh.extract_set(input_res, "nb_proc_per_task")
@@ -23,8 +25,6 @@ lang_set = dh.extract_set(input_res, "lang")
 
 conv_list_el_to_int(nb_block_set)
 conv_list_el_to_int(nb_proc_per_task_set)
-
-op_type = "min"
 
 ymlxmp_data = dict()
 for nbb in nb_block_set:

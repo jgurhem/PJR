@@ -16,7 +16,7 @@ filter_dict["datasize"] = ("16384", )
 filter_dict["test"] = ("blockLU", )
 filter_dict["success"] = ("true", )
 
-input_res = dh.read_json_file(sys.argv[1], filter_dict)
+input_res = dh.read_json_file(sys.argv[1], filter_dict, "mean")
 lang_set = dh.extract_set(input_res, "lang")
 
 op_type = "min"

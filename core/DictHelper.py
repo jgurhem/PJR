@@ -1,6 +1,37 @@
 from .Value import Value
 import json
 
+CASE_INFO = ['machine', 'test', 'datasize', 'nb_cores', 'nb_nodes', 'lang', 'blocksize', 'nb_blocks', 'nb_proc_per_task']
+VALUE_INFO = ['time_io', 'time_calc', 'time_i']
+
+class DictFilter:
+  def __init__(self, md, info):
+    self.__l = dict()
+    for i in info:
+      if i in md.keys():
+        self.__l[i] = md[i]
+
+  def __str__(self):
+     return str(self.__l)
+
+  def get_dict(self):
+     return self.__l
+
+class DictFilterValue:
+  def __init__(self, md, info):
+    self.__l = dict()
+    for i in info:
+      if i in md.keys():
+        self.__l[i] = Value(float(md[i]))
+
+  def __str__(self):
+     return str(self.__l)
+
+  def get_dict(self):
+     return self.__l
+#end class DictFilterValue
+
+
 def extract_set(md, val_name):
   s=set()
   for d in md:
@@ -12,12 +43,11 @@ def extract_set(md, val_name):
   return s
 
 def add_val(md_out, val_from, val_to):
-  new = float(val_from)
   prev = md_out.get(val_to, None)
   if prev == None:
-    md_out[val_to] = Value(new)
+    md_out[val_to] = Value(val_from)
   else:
-    md_out[val_to].add(new)
+    md_out[val_to].add(val_from)
 
 def get_val(md, el, op_type):
     r = md.get(el, None)
@@ -37,13 +67,25 @@ def __filter(md, fd):
     if not __filter_tuple(md[k], fd[k]): return False
   return True
 
-def read_json_file(filename, filter_dict):
-  input_res = []
+def read_json_file(filename, filter_dict, op_type):
+  input_res = dict()
   with open(filename) as fp:
     for cnt, line in enumerate(fp):
       line=line.strip()
       if not line.startswith("{"): continue
       mydict=json.loads(line)
       if __filter(mydict, filter_dict):
-        input_res.append(mydict)
-  return input_res
+        c = DictFilter(mydict, CASE_INFO)
+        v_dict = DictFilterValue(mydict, VALUE_INFO).get_dict()
+        c_str = str(c)
+        if c_str not in input_res.keys():
+          input_res[c_str] = c.get_dict()
+        for k, v in v_dict.items():
+          add_val(input_res[c_str], v, k)
+
+  for d in input_res.values():
+    for i in VALUE_INFO:
+      if i in d.keys():
+        d[i] = get_val(d, i, op_type)
+
+  return input_res.values()
