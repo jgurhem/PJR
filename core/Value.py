@@ -11,6 +11,16 @@ class Value:
       self.__min = val
       self.__max = val
 
+  def __str__(self):
+    s = '<n=' + str(self.__n)
+    s += '; sum=' + str(self.__sum)
+    s += '; min=' + str(self.__min)
+    s += '; max=' + str(self.__max)
+    s += '>'
+    return s
+
+  def __repr__(self):
+    return self.__str__()
 
   def add(self, val):
     if isinstance(val, Value):
