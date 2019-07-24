@@ -36,8 +36,10 @@ for d in input_res:
     dh.add_val(lang_v[lang], d["time_io"], nnodes - 1)
     nb_node_set.add(nnodes - 1)
   else:
-    dh.add_val(lang_v[lang], d["time_calc"], nnodes)
-    nb_node_set.add(nnodes)
+    val_key = "time_calc"
+    if val_key in d.keys():
+      dh.add_val(lang_v[lang], d[val_key], nnodes)
+      nb_node_set.add(nnodes)
 
 
 plt.style.use('dark_background')
