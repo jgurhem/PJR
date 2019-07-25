@@ -5,15 +5,10 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import core.DictHelper as dh
 import numpy as np
+import core.ParseInputArg as pia
 
-filter_dict = dict()
-filter_dict["machine"] = ("Poincare", )
-filter_dict["datasize"] = ("16384", )
-#filter_dict["datasize"] = ("8192", )
-filter_dict["test"] = ("blockLU", )
-filter_dict["success"] = ("true", )
-
-input_res = dh.read_json_file(sys.argv[1], filter_dict, "mean")
+in_var = pia.parse_input_arg()
+input_res = dh.read_json_file(sys.argv[1], in_var.filter_dict, "mean")
 lang_set = dh.extract_set(input_res, "lang")
 
 op_type = "min"
