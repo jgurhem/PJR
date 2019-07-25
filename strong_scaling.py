@@ -43,18 +43,23 @@ def strong_scaling_speedup(lang_set, lang_v, nb_node_set):
   for lang in lang_set:
     v = dict()
     v2 = dict()
-    for i in sorted(lang_v[lang].keys()):
-      v[str(i)] = dh.get_val(lang_v[lang], i, op_type)
-      v2[str(i)] = v[str(1)] / v[str(i)]
+    slang = sorted(lang_v[lang].keys(), key=float)
+    for i in slang:
+      v[i] = dh.get_val(lang_v[lang], i, op_type)
+      v2[i] = v[slang[0]] / v[i]
     ax.plot(v2.keys(), v2.values(), label=lang, marker='*')
 
   ideal = dict()
-  for i in sorted(nb_node_set):
-    ideal[str(i)] = i
+  pos = 1
+  for i in sorted(nb_node_set, key=float):
+    ideal[i] = pos
+    pos *= 2
   ax.plot(ideal.keys(), ideal.values(), label='Ideal Speedup')
 
   ax.set_yscale('log', basey=2)
   ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: '{:g}'.format(y)))
+  ax.set_xscale('log', basex=2)
+  ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: '{:g}'.format(x)))
   ax.set_ylabel("Speedup")
   ax.set_xlabel("Nodes")
 
@@ -163,9 +168,11 @@ def strong_scaling_speedup_bar(lang_set, lang_v, nb_node_set):
 
   ideal = dict()
   incr = 0
+  sc = 1
   for i in sorted(nb_node_set):
-    ideal[incr - width / 2 + width / len_lang / 2] = i
+    ideal[incr - width / 2 + width / len_lang / 2] = sc
     incr += 1
+    sc *= 2
   ax.bar(ideal.keys(), ideal.values(), width /len_lang, label='Ideal Speedup')
 
   ax.set_yscale('log', basey=2)
