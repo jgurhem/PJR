@@ -4,7 +4,6 @@ mpl.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import core.DictHelper as dh
-import numpy as np
 import core.ParseInputArg as pia
 
 in_var = pia.parse_input_arg()
@@ -135,7 +134,7 @@ def strong_scaling_bar(lang_set, lang_v, nb_node_set):
   ax.set_ylabel("Time (s)")
   ax.set_xlabel("Nodes")
   ax.set_xticklabels(nb_node_set, ha='right')
-  ax.set_xticks(np.arange(pos_g + 1))
+  ax.set_xticks(range(len(nb_node_set)))
 
   plt.legend()
   plt.savefig("fig_strong_scaling_bar.pdf")
@@ -174,7 +173,7 @@ def strong_scaling_speedup_bar(lang_set, lang_v, nb_node_set):
   ax.set_ylabel("Speedup")
   ax.set_xlabel("Nodes")
   ax.set_xticklabels(nb_node_set, ha='right')
-  ax.set_xticks(np.arange(pos_g))
+  ax.set_xticks(range(len(nb_node_set)))
 
   plt.legend()
   plt.savefig("fig_strong_scaling_speedup_bar.pdf")
@@ -207,8 +206,9 @@ def strong_scaling_speedup_against_previous_bar(lang_set, lang_v, nb_node_set):
   ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: '{:g}'.format(y)))
   ax.set_ylabel("Speedup")
   ax.set_xlabel("Nodes")
+  slang[0] = None
   ax.set_xticklabels(slang, ha='right')
-  ax.set_xticks(np.arange(pos_g))
+  ax.set_xticks(range(len(slang)))
   ax.axhline(1, color = 'black', lw = 0.5)
   ax.axhline(2, color = 'black', lw = 0.5)
 
