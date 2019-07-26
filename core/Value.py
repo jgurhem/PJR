@@ -42,3 +42,6 @@ class Value:
 
   def get_max(self):
     return self.__max
+
+  def get_val(self):
+    return self

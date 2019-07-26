@@ -13,7 +13,7 @@ class InputError(Exception):
     self.message = message
 
 
-def get_comma_separated_args(option, opt, value, parser):
+def add_args_to_dict(option, opt, value, parser):
   my_dict = getattr(parser.values, option.dest)
   split = value.split(':')
   if len(split) != 2:
@@ -21,8 +21,12 @@ def get_comma_separated_args(option, opt, value, parser):
   my_dict[split[0]] = split[1].split(',')
 
 
+def get_comma_separated_args(option, opt, value, parser):
+  setattr(parser.values, option.dest, value.split(','))
+
 def parse_input_arg():
   parser = OptionParser()
-  parser.add_option('-f', '--foo', type='string', action='callback', callback=get_comma_separated_args, dest="filter_dict", default=dict())
+  parser.add_option('-f', '--filter', type='string', action='callback', callback=add_args_to_dict, dest="filter_dict", default=dict())
+  parser.add_option('-s', '--not_show', type='string', action='callback', callback=get_comma_separated_args, dest = 'not_show')
   (options, args) = parser.parse_args()
   return options
