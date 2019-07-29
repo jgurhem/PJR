@@ -35,6 +35,9 @@ class Parser():
   def add_not_show(self):
     self.add_option('-s', '--not_show', type='string', action='callback', callback=get_comma_separated_args, dest = 'not_show')
 
+  def add_dark_background(self):
+    self.add_option('--dark_background', action='store_true', dest = 'dark_background', default = False)
+
   def get_options(self):
    (options, args) = self.parser.parse_args()
    return options

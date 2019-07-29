@@ -13,6 +13,7 @@ op_type = "min"
 
 parser = pia.Parser()
 parser.add_filter()
+parser.add_dark_background()
 in_var = parser.get_options()
 input_res = dh.read_json_file(sys.argv[1], in_var.filter_dict, op_type)
 nb_block_set = dh.extract_set(input_res, "nb_blocks")
@@ -42,7 +43,8 @@ for d in input_res:
     dh.add_val(lang_v[lang], d["time_io"], d["nb_cores"])
 
 
-plt.style.use('dark_background')
+if in_var.dark_background:
+  plt.style.use('dark_background')
 fig = plt.figure()
 ax = fig.gca()
 

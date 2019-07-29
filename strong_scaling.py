@@ -8,6 +8,7 @@ import core.ParseInputArg as pia
 
 parser = pia.Parser()
 parser.add_filter()
+parser.add_dark_background()
 in_var = parser.get_options()
 input_res = dh.read_json_file(sys.argv[1], in_var.filter_dict, "mean")
 lang_set = dh.extract_set(input_res, "lang")
@@ -36,7 +37,8 @@ for d in input_res:
 
 nb_node_set = sorted(nb_node_set, key=float)
 
-plt.style.use('dark_background')
+if in_var.dark_background:
+  plt.style.use('dark_background')
 
 def strong_scaling_speedup(lang_set, lang_v, nb_node_set):
   fig = plt.figure()
