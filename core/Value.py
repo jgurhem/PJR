@@ -13,9 +13,10 @@ class Value:
 
   def __str__(self):
     s = '<n=' + str(self.__n)
-    s += '; sum=' + str(self.__sum)
-    s += '; min=' + str(self.__min)
-    s += '; max=' + str(self.__max)
+    s += f'; sum= {self.__sum:.3f}'
+    s += f'; mean= {self.get_mean():.3f}'
+    s += f'; min= {self.__min:.3f}'
+    s += f'; max= {self.__max:.3f}'
     s += '>'
     return s
 
