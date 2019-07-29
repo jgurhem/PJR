@@ -6,7 +6,9 @@ import matplotlib.ticker as ticker
 import core.DictHelper as dh
 import core.ParseInputArg as pia
 
-in_var = pia.parse_input_arg()
+parser = pia.Parser()
+parser.add_filter()
+in_var = parser.get_options()
 input_res = dh.read_json_file(sys.argv[1], in_var.filter_dict, "mean")
 lang_set = dh.extract_set(input_res, "lang")
 

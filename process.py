@@ -11,7 +11,9 @@ def conv_list_el_to_int(ml):
 
 op_type = "min"
 
-in_var = pia.parse_input_arg()
+parser = pia.Parser()
+parser.add_filter()
+in_var = parser.get_options()
 input_res = dh.read_json_file(sys.argv[1], in_var.filter_dict, op_type)
 nb_block_set = dh.extract_set(input_res, "nb_blocks")
 blocksize_set = dh.extract_set(input_res, "blocksize")
