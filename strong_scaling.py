@@ -9,6 +9,7 @@ import core.ParseInputArg as pia
 parser = pia.Parser()
 parser.add_filter()
 parser.add_dark_background()
+parser.add_option_list("-o", "--out-list", dest = "out_list")
 in_var = parser.get_options()
 input_res = dh.read_json_file(sys.argv[1], in_var.filter_dict, "mean")
 lang_set = dh.extract_set(input_res, "lang")
@@ -227,9 +228,15 @@ def strong_scaling_speedup_against_previous_bar(lang_set, lang_v, nb_node_set):
   plt.savefig("fig_strong_scaling_speedup_against_previous_bar.pdf")
   plt.close()
 
-strong_scaling(lang_set, lang_v)
-strong_scaling_bar(lang_set, lang_v, nb_node_set)
-strong_scaling_speedup_bar(lang_set, lang_v, nb_node_set)
-strong_scaling_speedup(lang_set, lang_v, nb_node_set)
-strong_scaling_latex_table(lang_set, lang_v, nb_node_set)
-strong_scaling_speedup_against_previous_bar(lang_set, lang_v, nb_node_set)
+if 'ss' in in_var.out_list:
+  strong_scaling(lang_set, lang_v)
+if 'ss_bar' in in_var.out_list:
+  strong_scaling_bar(lang_set, lang_v, nb_node_set)
+if 'ss_su_bar' in in_var.out_list:
+  strong_scaling_speedup_bar(lang_set, lang_v, nb_node_set)
+if 'ss_su' in in_var.out_list:
+  strong_scaling_speedup(lang_set, lang_v, nb_node_set)
+if 'ss_latex' in in_var.out_list:
+  strong_scaling_latex_table(lang_set, lang_v, nb_node_set)
+if 'ss_prev' in in_var.out_list:
+  strong_scaling_speedup_against_previous_bar(lang_set, lang_v, nb_node_set)

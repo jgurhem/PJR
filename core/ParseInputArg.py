@@ -29,6 +29,9 @@ class Parser():
     self.parser = OptionParser()
     self.add_option = self.parser.add_option
 
+  def add_option_list(self, *args, **kwargs):
+    self.add_option(*args, type='string', action='callback', callback=get_comma_separated_args, dest=kwargs['dest'], default=list())
+
   def add_filter(self):
     self.add_option('-f', '--filter', type='string', action='callback', callback=add_args_to_dict, dest="filter_dict", default=dict())
 
