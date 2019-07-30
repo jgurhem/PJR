@@ -93,32 +93,32 @@ def strong_scaling(lang_set, lang_v):
   plt.close()
 
 def strong_scaling_latex_table(lang_set, lang_v, nb_node_set):
-  print("\\begin{table*}")
-  print("\\newcolumntype{C}{>{\centering\\arraybackslash}X}")
-  print("\\begin{tabularx}{\\textwidth}{", end='')
-  for i in range(len(nb_node_set) + 1):
-    print("C", end='')
-  print("}")
+  f = open("strong_scaling_latex_table.tex", "w")
 
-  print("Lang/#Nodes", end = ' ')
+  f.write('\\newcolumntype{C}{>{\centering\\arraybackslash}X}\n')
+  f.write('\\begin{tabularx}{\\textwidth}{')
+  for i in range(len(nb_node_set) + 1):
+    f.write('C')
+  f.write('}\n')
+
+  f.write('Lang/#Nodes')
   for i in sorted(nb_node_set, key=float):
-      print('&', end=' ')
-      print(i, end=' ')
-  print('\\\\ \hline')
+      f.write('& ')
+      f.write(f'{i} ')
+  f.write('\\\\ \hline\n')
 
   for lang in lang_set:
-    print(lang, end=' ')
+    f.write(lang + ' ')
     for i in sorted(nb_node_set, key=float):
-      print('&', end=' ')
+      f.write('& ')
       v = dh.get_val(lang_v[lang], i, op_type)
       if v != None:
-        print(f'{v:.2f}', end=' ')
-    print('\\\\')
+        f.write(f'{v:.2f} ')
+    f.write('\\\\\n')
 
-  print('\hline')
-  print("\\end{tabularx}")
-  print("\\end{table*}")
-
+  f.write('\hline\n')
+  f.write('\\end{tabularx}\n')
+  f.close()
 
 def strong_scaling_bar(lang_set, lang_v, nb_node_set):
   fig = plt.figure()
