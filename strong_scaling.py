@@ -120,6 +120,46 @@ def strong_scaling_latex_table(lang_set, lang_v, nb_node_set):
   f.write('\\end{tabularx}\n')
   f.close()
 
+def strong_scaling_latex_table_param(lang_set, nb_node_set, in_res):
+  s_in = sorted(in_res, key = lambda i: (i["lang"], float(i["nb_nodes"]), i[val_key]))
+  lang_b = dict()
+  for lang in lang_set:
+    lang_b[lang] = dict()
+  for d in s_in:
+    if d["lang"] == "YML+XMP":
+      if lang_b[d["lang"]].get(int(d["nb_nodes"]) - 1, None) == None:
+        lang_b[d["lang"]][int(d["nb_nodes"]) - 1] = d
+    else:
+      if lang_b[d["lang"]].get(int(d["nb_nodes"]), None) == None:
+        lang_b[d["lang"]][int(d["nb_nodes"])] = d
+
+  f = open("strong_scaling_latex_table_param.tex", "w")
+  f.write('\\newcolumntype{C}{>{\centering\\arraybackslash}X}\n')
+  f.write('\\newcolumntype{M}[1]{>{\centering\\arraybackslash}m{#1}}\n')
+  f.write('\\begin{tabularx}{\\linewidth}{')
+  f.write('M{1.5cm}')
+  for i in range(len(nb_node_set)):
+    f.write('C')
+  f.write('}\n')
+
+  f.write('Lang/\#blocks')
+  for i in sorted(nb_node_set, key=float):
+      f.write('& ')
+      f.write(f'{i} ')
+  f.write('\\\\ \hline\n')
+
+  for lang in lang_set:
+    f.write(lang + ' ')
+    for key in sorted(nb_node_set, key=float):
+      if key in lang_b[lang].keys():
+        if "nb_blocks" in lang_b[lang][key].keys() and "blocksize" in lang_b[lang][key].keys():
+          f.write(f'& {lang_b[lang][key]["nb_blocks"]} ')
+    f.write('\\\\\n')
+
+  f.write('\hline\n')
+  f.write('\\end{tabularx}\n')
+  f.close()
+
 def strong_scaling_bar(lang_set, lang_v, nb_node_set):
   fig = plt.figure()
   ax = fig.gca()
@@ -238,5 +278,7 @@ if 'ss_su' in in_var.out_list:
   strong_scaling_speedup(lang_set, lang_v, nb_node_set)
 if 'ss_latex' in in_var.out_list:
   strong_scaling_latex_table(lang_set, lang_v, nb_node_set)
+if 'ss_latex_param' in in_var.out_list:
+  strong_scaling_latex_table_param(lang_set, nb_node_set, input_res)
 if 'ss_prev' in in_var.out_list:
   strong_scaling_speedup_against_previous_bar(lang_set, lang_v, nb_node_set)
