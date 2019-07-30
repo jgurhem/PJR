@@ -15,6 +15,7 @@ input_res = dh.read_json_file(sys.argv[1], in_var.filter_dict, "mean")
 lang_set = dh.extract_set(input_res, "lang")
 
 op_type = "min"
+val_key = "time_calc"
 
 lang_v = dict()
 for lang in lang_set:
@@ -28,10 +29,9 @@ for d in input_res:
     if nnodes < 2:
       print("error : YML+XMP number of nodes < 2")
       sys.exit(1)
-    dh.add_val(lang_v[lang], d["time_io"], nnodes - 1)
+    dh.add_val(lang_v[lang], d[val_key], nnodes - 1)
     nb_node_set.add(nnodes - 1)
   else:
-    val_key = "time_calc"
     if val_key in d.keys():
       dh.add_val(lang_v[lang], d[val_key], nnodes)
       nb_node_set.add(nnodes)
