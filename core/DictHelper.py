@@ -2,7 +2,7 @@ from .Value import Value
 import json
 
 CASE_INFO = ['machine', 'test', 'datasize', 'nb_cores', 'nb_nodes', 'lang', 'blocksize', 'nb_blocks', 'nb_proc_per_task']
-VALUE_INFO = ['time_io', 'time_calc', 'time_i']
+VALUE_INFO = ['time_io', 'time_calc', 'time_i', 'time_app']
 
 class DictFilter:
   def __init__(self, md, info):

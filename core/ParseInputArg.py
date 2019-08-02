@@ -36,7 +36,7 @@ class Parser():
     self.add_option('-f', '--filter', type='string', action='callback', callback=add_args_to_dict, dest="filter_dict", default=dict())
 
   def add_not_show(self):
-    self.add_option('-s', '--not_show', type='string', action='callback', callback=get_comma_separated_args, dest = 'not_show')
+    self.add_option('-s', '--not_show', type='string', action='callback', callback=get_comma_separated_args, dest = 'not_show', default=list())
 
   def add_dark_background(self):
     self.add_option('--dark_background', action='store_true', dest = 'dark_background', default = False)
