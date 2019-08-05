@@ -1,11 +1,13 @@
 import sys
 import core.DictHelper as dh
 import core.ParseInputArg as pia
+import core.JsonToCmd as jtc
 
 parser = pia.Parser()
 parser.add_filter()
 parser.add_not_show()
 parser.add_option('--best_case', action='store', dest="best_case_value", default="time_calc", help='time value used to sort the cases')
+parser.add_option('--cmd', action='store_true', dest="to_cmd", default=False, help='print commands to perform the test')
 parser.add_option('-N', '--number_show', action='store', dest="number_values_shown", type=int, default=0, help="show N best cases, default : show all (N=0)")
 in_var = parser.get_options()
 
@@ -32,3 +34,5 @@ for d in input_res:
     if k in in_var.not_show: continue
     new_d[k] = v
   print(new_d)
+  if in_var.to_cmd:
+    print(jtc.dict_to_cmd(d))
