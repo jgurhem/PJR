@@ -136,13 +136,15 @@ def strong_scaling_latex_table_param(lang_set, nb_node_set, in_res):
   f = open("strong_scaling_latex_table_param.tex", "w")
   f.write('\\newcolumntype{C}{>{\centering\\arraybackslash}X}\n')
   f.write('\\newcolumntype{M}[1]{>{\centering\\arraybackslash}m{#1}}\n')
+  f.write('\\renewcommand{\\arraystretch}{1.2}\n')
   f.write('\\begin{tabularx}{\\linewidth}{')
-  f.write('M{1.5cm}')
+  f.write('M{1.1cm}')
   for i in range(len(nb_node_set)):
     f.write('C')
   f.write('}\n')
 
-  f.write('Lang/\#blocks')
+  f.write('\\\\ \hline\n')
+  #f.write('Lang/ \#tiles (\#procs per task)')
   for i in sorted(nb_node_set, key=float):
       f.write('& ')
       f.write(f'{i} ')
@@ -151,9 +153,13 @@ def strong_scaling_latex_table_param(lang_set, nb_node_set, in_res):
   for lang in lang_set:
     f.write(lang + ' ')
     for key in sorted(nb_node_set, key=float):
+      f.write(f'& ')
       if key in lang_b[lang].keys():
         if "nb_blocks" in lang_b[lang][key].keys() and "blocksize" in lang_b[lang][key].keys():
-          f.write(f'& {lang_b[lang][key]["nb_blocks"]} ')
+          v = lang_b[lang][key]["nb_blocks"]
+          p = lang_b[lang][key].get("nb_proc_per_task", 1)
+          f.write(f'${v}^2$({p})')
+      f.write(f' ')
     f.write('\\\\\n')
 
   f.write('\hline\n')
