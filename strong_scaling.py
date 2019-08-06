@@ -171,14 +171,18 @@ def strong_scaling_bar(lang_set, lang_v, nb_node_set):
   ax = fig.gca()
   width = 0.7
 
+  pos_l = dict()
+  incr = 0
+  for i in sorted(nb_node_set, key=float):
+    pos_l[i] = incr
+    incr += 1
+
   pos_g = 0
   len_lang = len(lang_set)
   for lang in lang_set:
     v = dict()
-    pos_l = 0
     for i in sorted(lang_v[lang].keys(), key=float):
-      v[pos_l] = dh.get_val(lang_v[lang], i, op_type)
-      pos_l = pos_l + 1
+      v[pos_l[i]] = dh.get_val(lang_v[lang], i, op_type)
     v_keys = []
     for i in list(v.keys()):
       v_keys.append(i + pos_g * width / len_lang - width / 2 + width / len_lang / 2)
