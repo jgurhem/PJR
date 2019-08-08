@@ -169,7 +169,7 @@ def strong_scaling_latex_table_param(lang_set, nb_node_set, in_res):
 def strong_scaling_bar(lang_set, lang_v, nb_node_set):
   fig = plt.figure()
   ax = fig.gca()
-  width = 0.7
+  width = 0.85
 
   pos_l = dict()
   incr = 0
@@ -186,7 +186,17 @@ def strong_scaling_bar(lang_set, lang_v, nb_node_set):
     v_keys = []
     for i in list(v.keys()):
       v_keys.append(i + pos_g * width / len_lang - width / 2 + width / len_lang / 2)
-    ax.bar(v_keys, v.values(), width /len_lang, label=lang, align='center')
+    rects = ax.bar(v_keys, v.values(), width /len_lang, label=lang, align='center')
+    for rect in rects:
+      height = rect.get_height()
+      ax.annotate(f'{height:.0f}',
+                  xy=(rect.get_x() + rect.get_width() / 2, height),
+                  xytext=(1, 3),  # 3 points vertical offset
+                  textcoords="offset pixels",
+                  rotation=90,
+                  size=10,
+                  in_layout=True,
+                  ha='center', va='bottom')
     pos_g = pos_g + 1
 
 #  ax.set_yscale('log', basey=2)
@@ -197,6 +207,8 @@ def strong_scaling_bar(lang_set, lang_v, nb_node_set):
   ax.set_xticks(range(len(nb_node_set)))
 
   plt.legend()
+  plt.margins(y=0.12)
+  plt.tight_layout()
   plt.savefig("fig_strong_scaling_bar.pdf")
   plt.close()
 
