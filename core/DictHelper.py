@@ -92,3 +92,15 @@ def read_json_file(filename, filter_dict, op_type):
         d[i] = get_val(d, i, op_type)
 
   return input_res.values()
+
+
+def read_json_file_raw(filename, filter_dict, op_type):
+  input_res = list()
+  with open(filename) as fp:
+    for cnt, line in enumerate(fp):
+      line=line.strip()
+      if not line.startswith("{"): continue
+      mydict=json.loads(line)
+      if __filter(mydict, filter_dict):
+        input_res.append(mydict)
+  return input_res
