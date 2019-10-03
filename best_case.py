@@ -9,6 +9,8 @@ parser.add_not_show()
 parser.add_option('--best_case', action='store', dest="best_case_value", default="time_calc", help='time value used to sort the cases')
 parser.add_option('--cmd', action='store_true', dest="to_cmd", default=False, help='print commands to perform the test')
 parser.add_option('-N', '--number_show', action='store', dest="number_values_shown", type=int, default=0, help="show N best cases, default : show all (N=0)")
+parser.add_option('--prefix', action='store', dest="prefix", type=str, default="", help="command prefix")
+parser.add_option('--suffix', action='store', dest="suffix", type=str, default="", help="command suffix")
 in_var = parser.get_options()
 
 def my_key(i):
@@ -35,4 +37,4 @@ for d in input_res:
     new_d[k] = v
   print(new_d)
   if in_var.to_cmd:
-    print(jtc.dict_to_cmd(d))
+    print(in_var.prefix + jtc.dict_to_cmd(d) + in_var.suffix)
